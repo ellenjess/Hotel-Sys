@@ -5,10 +5,26 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="hotelsys.css">
     <title>Hotel Hilbert - Sistema de Gestão</title>
+    <script>
+        function exibeSecao(id) {
+            // Exibe a seção correspondente ao id e oculta as demais. Se id for vazio, exibe todas as seções.
+            for (const secao of document.querySelectorAll('section')) {
+                if (id === '') {
+                    secao.style.display = 'block';
+                } else {
+                    secao.style.display = 'none';
+                }
+            }
+            if (id===''){
+                return;
+            }
+            document.getElementById(id).style.display = 'block';
+        }
+    </script>
 </head>
  
 <body>
- 
+    
     <header>
         <h1>Hotel Hilbert</h1>
         <p>Talvez você precise trocar de quarto em algum momento...</p>
@@ -17,10 +33,11 @@
     <hr>
  
     <nav>
-        <a href="#inicio">Início</a> |
-        <a href="#problemas">Problemas</a> |
-        <a href="#solucoes">Soluções</a> |
-        <a href="#processo">Atendimento</a>
+        <a href="#" onclick="exibeSecao('inicio')">Início</a> |
+        <a href="#" onclick="exibeSecao('problemas')">Problemas</a> |
+        <a href="#" onclick="exibeSecao('solucoes')">Soluções</a> |
+        <a href="#" onclick="exibeSecao('processo')">Atendimento</a> |
+        <a href="#" onclick="exibeSecao('')">Tudo</a>
     </nav>
  
     <hr>
@@ -34,9 +51,10 @@
                 Sistema desenvolvido para melhorar a organização
                 e o gerenciamento do hotel.
             </p>
+            <hr>
         </section>
  
-        <hr>
+        
  
         <section id="problemas">
  
@@ -81,10 +99,10 @@
                     recebida, está em andamento ou foi concluída.
                 </p>
             </article>
+            
+            <hr>
  
         </section>
- 
-        <hr>
  
         <section id="solucoes">
  
@@ -129,10 +147,10 @@
                     Aberta, Em andamento ou Concluída.
                 </p>
             </article>
+             
+            <hr>
  
         </section>
- 
-        <hr>
  
         <section id="processo">
  
@@ -148,17 +166,23 @@
                 <li>Check-out</li>
                 <li>Finalização da hospedagem</li>
             </ol>
- 
+
+            <hr>
         </section>
  
     </main>
  
-    <hr>
+    
  
     <footer>
         <p>Hotel Hilbert - Sistema de Gestão Hoteleira</p>
     </footer>
  
 </body>
+
+<script>
+    // Exibir a seção "Início" por padrão
+    exibeSecao('inicio');
+</script>
  
 </html>
