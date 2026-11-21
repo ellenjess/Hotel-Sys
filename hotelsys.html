@@ -1,188 +1,586 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
- 
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="hotelsys.css">
-    <title>Hotel Hilbert - Sistema de Gestão</title>
+    <title>Hotel Hilbert - Sistema de Gestão Hoteleira</title>
+</head>
+
+<body>
+
+    <header class="topo">
+        <div class="container">
+            <h1>Hotel Hilbert</h1>
+            <p class="subtitulo">"Onde sempre há um quarto disponível — agora sem precisar trocar de quarto no meio da noite."</p>
+        </div>
+    </header>
+
+    <nav class="menu-navegacao">
+        <div class="container nav-links">
+            <button class="nav-btn active" onclick="exibeSecao('inicio', this)">Início & Diagnóstico</button>
+            <button class="nav-btn" onclick="exibeSecao('reservas', this)">1. Reservas & Check-in/out</button>
+            <button class="nav-btn" onclick="exibeSecao('quartos', this)">2. Status dos Quartos</button>
+            <button class="nav-btn" onclick="exibeSecao('solucoes-chamados', this)">3. Solicitações</button>
+            <button class="nav-btn" onclick="exibeSecao('consumo', this)">4. Consumo & Conta</button>
+            <button class="nav-btn" onclick="exibeSecao('mapa-andares', this)">5. Mapa dos Andares</button>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section id="inicio" class="tela ativa">
+            <div class="card destaque">
+                <h2>Bem-vindo ao Sistema de Gestão Hotel Hilbert</h2>
+                <p>
+                    Plataforma integrada desenvolvida para eliminar gargalos operacionais, conectar a recepção às equipes de limpeza e manutenção, e unificar a conta do hóspede do check-in ao check-out.
+                </p>
+            </div>
+
+            <h3 class="titulo-secao">Os 5 Problemas Identificados e Como o Sistema os Resolve</h3>
+            <div class="grid-cards">
+                <article class="card">
+                    <span class="badge">Problema 1</span>
+                    <h4>Desorganização de Reservas</h4>
+                    <p><strong>Antes:</strong> Conflitos de quartos e controle manual.</p>
+                    <p><strong>Solução:</strong> Bloqueio automático de quartos ocupados ou reservados na aba <em>Reservas</em>.</p>
+                </article>
+
+                <article class="card">
+                    <span class="badge">Problema 2</span>
+                    <h4>Demora no Check-in / Check-out</h4>
+                    <p><strong>Antes:</strong> Filas e preenchimento lento.</p>
+                    <p><strong>Solução:</strong> Cadastro rápido e encerramento de estadia com cálculo automático.</p>
+                </article>
+
+                <article class="card">
+                    <span class="badge">Problema 3</span>
+                    <h4>Controle de Limpeza e Status</h4>
+                    <p><strong>Antes:</strong> Recepção sem saber quais quartos estavam limpos.</p>
+                    <p><strong>Solução:</strong> Painel visual e mini mapa dos andares em tempo real.</p>
+                </article>
+
+                <article class="card">
+                    <span class="badge">Problema 4</span>
+                    <h4>Acompanhamento de Solicitações</h4>
+                    <p><strong>Antes:</strong> Pedidos de manutenção e serviço de quarto perdidos.</p>
+                    <p><strong>Solução:</strong> Fila de chamados por quarto com status atualizado.</p>
+                </article>
+
+                <article class="card">
+                    <span class="badge">Problema 5</span>
+                    <h4>Falta de Integração na Conta</h4>
+                    <p><strong>Antes:</strong> Consumo separado da hospedagem.</p>
+                    <p><strong>Solução:</strong> Lançamento direto de consumo na fatura do quarto para fechamento único.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="reservas" class="tela">
+            <div class="card">
+                <h2>Nova Reserva / Check-in Rápido</h2>
+                <p class="descricao-tela">Apenas quartos com status <strong>Disponível</strong> aparecem para evitar conflitos de reserva.</p>
+                
+                <form id="form-reserva" class="form-grid" onsubmit="registrarReserva(event)">
+                    <div class="campo">
+                        <label for="hospede-nome">Nome do Hóspede</label>
+                        <input type="text" id="hospede-nome" placeholder="Ex: Ana Beatriz Silva" required>
+                    </div>
+                    <div class="campo">
+                        <label for="hospede-doc">CPF / Documento</label>
+                        <input type="text" id="hospede-doc" placeholder="000.000.000-00" required>
+                    </div>
+                    <div class="campo">
+                        <label for="select-quarto-reserva">Quarto Disponível</label>
+                        <select id="select-quarto-reserva" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="qtd-diarias">Quantidade de Diárias</label>
+                        <input type="number" id="qtd-diarias" min="1" max="30" value="2" required>
+                    </div>
+                    <div class="campo-botao">
+                        <button type="submit" class="btn btn-primario">Confirmar Check-in</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Hóspedes Ativos e Reservas</h3>
+                <div class="tabela-responsiva">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quarto</th>
+                                <th>Hóspede</th>
+                                <th>Diárias</th>
+                                <th>Total Parcial (Diárias + Consumo)</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-hospedes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="quartos" class="tela">
+            <div class="card">
+                <h2>Controle de Governança e Manutenção</h2>
+                <p class="descricao-tela">Altere o status das unidades conforme a conclusão da limpeza ou reparos.</p>
+                <div id="grid-quartos" class="grid-quartos"></div>
+            </div>
+        </section>
+
+        <section id="solucoes-chamados" class="tela">
+            <div class="card">
+                <h2>Abrir Solicitação (Manutenção / Serviço de Quarto)</h2>
+                <form class="form-grid" onsubmit="abrirSolicitacao(event)">
+                    <div class="campo">
+                        <label for="chamado-quarto">Quarto</label>
+                        <select id="chamado-quarto" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="chamado-setor">Setor Responsável</label>
+                        <select id="chamado-setor">
+                            <option value="Manutenção">Manutenção</option>
+                            <option value="Serviço de Quarto">Serviço de Quarto</option>
+                            <option value="Governança">Governança / Limpeza</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label for="chamado-desc">Descrição do Pedido</label>
+                        <input type="text" id="chamado-desc" placeholder="Ex: Ar-condicionado não gela / Toalhas extras" required>
+                    </div>
+                    <div class="campo-botao">
+                        <button type="submit" class="btn btn-primario">Registrar Chamado</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Acompanhamento de Solicitações</h3>
+                <div class="tabela-responsiva">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Quarto</th>
+                                <th>Setor</th>
+                                <th>Descrição</th>
+                                <th>Status</th>
+                                <th>Avançar Etapa</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-chamados"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="consumo" class="tela">
+            <div class="card">
+                <h2>Lançar Consumo na Conta do Hóspede</h2>
+                <p class="descricao-tela">Os valores lançados aqui são somados automaticamente à fatura de check-out do quarto.</p>
+                
+                <form class="form-grid" onsubmit="lancarConsumo(event)">
+                    <div class="campo">
+                        <label for="consumo-quarto">Quarto Ocupado</label>
+                        <select id="consumo-quarto" required></select>
+                    </div>
+                    <div class="campo">
+                        <label for="consumo-item">Item / Serviço</label>
+                        <select id="consumo-item">
+                            <option value="Frigobar - Água/Refrigerante|15">Frigobar - Água/Refrigerante (R$ 15,00)</option>
+                            <option value="Restaurante - Jantar Executivo|65">Restaurante - Jantar Executivo (R$ 65,00)</option>
+                            <option value="Lavanderia - Pacote Express|40">Lavanderia - Pacote Express (R$ 40,00)</option>
+                            <option value="Room Service - Café da Manhã|35">Room Service - Café da Manhã (R$ 35,00)</option>
+                        </select>
+                    </div>
+                    <div class="campo-botao">
+                        <button type="submit" class="btn btn-primario">Adicionar à Conta</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3>Extrato Integrado por Quarto Ocupado</h3>
+                <div id="extrato-contas" class="grid-cards"></div>
+            </div>
+        </section>
+
+        <!-- SEÇÃO 5: NOVA ABA - MINI MAPA DOS ANDARES -->
+        <section id="mapa-andares" class="tela">
+            <div class="card">
+                <div class="cabecalho-mapa">
+                    <div>
+                        <h2>Planta Visual — Mini Mapa dos Andares</h2>
+                        <p class="descricao-tela">Visão arquitetônica em tempo real da ocupação, limpeza e manutenção por pavimento.</p>
+                    </div>
+                    <div class="legenda-mapa">
+                        <span class="legenda-item"><i class="bolinha bg-livre"></i> Disponível</span>
+                        <span class="legenda-item"><i class="bolinha bg-ocupado"></i> Ocupado</span>
+                        <span class="legenda-item"><i class="bolinha bg-limpeza"></i> Em Limpeza</span>
+                        <span class="legenda-item"><i class="bolinha bg-manutencao"></i> Manutenção</span>
+                    </div>
+                </div>
+
+                <!-- Container onde os andares serão desenhados pelo JavaScript -->
+                <div id="container-planta-andares" class="planta-hotel"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="rodape">
+        <p>Hotel Hilbert — Sistema Integrado de Gestão Hoteleira</p>
+    </footer>
+
     <script>
-        function exibeSecao(id) {
-            // Exibe a seção correspondente ao id e oculta as demais. Se id for vazio, exibe todas as seções.
-            for (const secao of document.querySelectorAll('section')) {
-                if (id === '') {
-                    secao.style.display = 'block';
-                } else {
-                    secao.style.display = 'none';
-                }
+        let quartos = [
+            // 1º Andar
+            { numero: '101', andar: 1, tipo: 'Standard', diaria: 250, status: 'Ocupado', hospede: 'Carlos Drummond', doc: '123.456.789-00', diarias: 3, consumos: [{ item: 'Frigobar - Água/Refrigerante', valor: 15 }] },
+            { numero: '102', andar: 1, tipo: 'Standard', diaria: 250, status: 'Disponível', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '103', andar: 1, tipo: 'Standard', diaria: 250, status: 'Em Limpeza', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '104', andar: 1, tipo: 'Standard', diaria: 250, status: 'Disponível', hospede: null, doc: null, diarias: 0, consumos: [] },
+            
+            // 2º Andar
+            { numero: '201', andar: 2, tipo: 'Luxo', diaria: 400, status: 'Disponível', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '202', andar: 2, tipo: 'Luxo', diaria: 400, status: 'Ocupado', hospede: 'Mariana Costa', doc: '987.654.321-11', diarias: 2, consumos: [{ item: 'Restaurante - Jantar Executivo', valor: 65 }] },
+            { numero: '203', andar: 2, tipo: 'Luxo', diaria: 400, status: 'Manutenção', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '204', andar: 2, tipo: 'Luxo', diaria: 400, status: 'Ocupado', hospede: 'Roberto Almeida', doc: '456.789.123-22', diarias: 4, consumos: [] },
+
+            // 3º Andar (Cobertura / Suítes)
+            { numero: '301', andar: 3, tipo: 'Suíte Master', diaria: 650, status: 'Ocupado', hospede: 'Fernanda Montenegro', doc: '321.654.987-33', diarias: 5, consumos: [{ item: 'Room Service - Café da Manhã', valor: 35 }] },
+            { numero: '302', andar: 3, tipo: 'Suíte Master', diaria: 650, status: 'Disponível', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '303', andar: 3, tipo: 'Suíte Presidencial', diaria: 950, status: 'Em Limpeza', hospede: null, doc: null, diarias: 0, consumos: [] },
+            { numero: '304', andar: 3, tipo: 'Suíte Presidencial', diaria: 950, status: 'Disponível', hospede: null, doc: null, diarias: 0, consumos: [] }
+        ];
+
+        let chamados = [
+            { id: 1, quarto: '101', setor: 'Serviço de Quarto', desc: 'Travesseiros extras solicitados', status: 'Em andamento' },
+            { id: 2, quarto: '203', setor: 'Manutenção', desc: 'Reparo na fechadura eletrônica', status: 'Aberta' }
+        ];
+
+        // --- NAVEGAÇÃO ENTRE TELAS ---
+        function exibeSecao(id, botaoClicado) {
+            document.querySelectorAll('.tela').forEach(secao => secao.classList.remove('ativa'));
+            document.getElementById(id).classList.add('ativa');
+
+            if (botaoClicado) {
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+                botaoClicado.classList.add('active');
             }
-            if (id===''){
+            atualizarInterface();
+        }
+
+        function atualizarInterface() {
+            renderizarSelects();
+            renderizarHospedes();
+            renderizarQuartos();
+            renderizarChamados();
+            renderizarExtratos();
+            renderizarMapaAndares();
+        }
+
+        function renderizarSelects() {
+            const selectReserva = document.getElementById('select-quarto-reserva');
+            const selectConsumo = document.getElementById('consumo-quarto');
+            const selectChamado = document.getElementById('chamado-quarto');
+
+            selectReserva.innerHTML = '';
+            selectConsumo.innerHTML = '';
+            selectChamado.innerHTML = '';
+
+            quartos.forEach(q => {
+                selectChamado.innerHTML += `<option value="${q.numero}">Quarto ${q.numero} (${q.status})</option>`;
+
+                if (q.status === 'Disponível') {
+                    selectReserva.innerHTML += `<option value="${q.numero}">Quarto ${q.numero} (${q.andar}º Andar) - ${q.tipo} (R$ ${q.diaria}/dia)</option>`;
+                }
+
+                if (q.status === 'Ocupado') {
+                    selectConsumo.innerHTML += `<option value="${q.numero}">Quarto ${q.numero} - ${q.hospede}</option>`;
+                }
+            });
+
+            if (selectReserva.innerHTML === '') {
+                selectReserva.innerHTML = '<option value="">Nenhum quarto disponível no momento</option>';
+            }
+            if (selectConsumo.innerHTML === '') {
+                selectConsumo.innerHTML = '<option value="">Nenhum quarto ocupado</option>';
+            }
+        }
+
+        function registrarReserva(event) {
+            event.preventDefault();
+            const numQuarto = document.getElementById('select-quarto-reserva').value;
+            if (!numQuarto) return alert('Não há quartos disponíveis!');
+
+            const nome = document.getElementById('hospede-nome').value;
+            const doc = document.getElementById('hospede-doc').value;
+            const diarias = parseInt(document.getElementById('qtd-diarias').value);
+
+            const quarto = quartos.find(q => q.numero === numQuarto);
+            quarto.status = 'Ocupado';
+            quarto.hospede = nome;
+            quarto.doc = doc;
+            quarto.diarias = diarias;
+            quarto.consumos = [];
+
+            document.getElementById('form-reserva').reset();
+            atualizarInterface();
+            alert(`Check-in de ${nome} realizado no Quarto ${numQuarto}!`);
+        }
+
+        function realizarCheckout(numQuarto) {
+            const quarto = quartos.find(q => q.numero === numQuarto);
+            const totalConsumo = quarto.consumos.reduce((soma, c) => soma + c.valor, 0);
+            const totalGeral = (quarto.diaria * quarto.diarias) + totalConsumo;
+
+            const confirmar = confirm(
+                `CHECK-OUT — QUARTO ${quarto.numero}\n` +
+                `Hóspede: ${quarto.hospede}\n` +
+                `Diárias (${quarto.diarias}x R$ ${quarto.diaria}): R$ ${quarto.diaria * quarto.diarias},00\n` +
+                `Consumo Integrado: R$ ${totalConsumo},00\n` +
+                `---------------------------------\n` +
+                `TOTAL A PAGAR: R$ ${totalGeral},00\n\n` +
+                `Confirmar encerramento e enviar quarto para limpeza?`
+            );
+
+            if (confirmar) {
+                quarto.status = 'Em Limpeza';
+                quarto.hospede = null;
+                quarto.doc = null;
+                quarto.diarias = 0;
+                quarto.consumos = [];
+                atualizarInterface();
+            }
+        }
+
+        function renderizarHospedes() {
+            const tbody = document.getElementById('lista-hospedes');
+            tbody.innerHTML = '';
+            const ocupados = quartos.filter(q => q.status === 'Ocupado');
+
+            if (ocupados.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="texto-centro">Nenhum hóspede ativo no momento.</td></tr>';
                 return;
             }
-            document.getElementById(id).style.display = 'block';
-        }
-    </script>
-</head>
- 
-<body>
-    
-    <header>
-        <h1>Hotel Hilbert</h1>
-        <p>Talvez você precise trocar de quarto em algum momento...</p>
-    </header>
- 
-    <hr>
- 
-    <nav>
-        <a href="#" onclick="exibeSecao('inicio')">Início</a> |
-        <a href="#" onclick="exibeSecao('problemas')">Problemas</a> |
-        <a href="#" onclick="exibeSecao('solucoes')">Soluções</a> |
-        <a href="#" onclick="exibeSecao('processo')">Atendimento</a> |
-        <a href="#" onclick="exibeSecao('')">Tudo</a>
-    </nav>
- 
-    <hr>
- 
-    <main>
- 
-        <section id="inicio">
-            <h2>Bem-vindo ao Hotel Hilbert</h2>
- 
-            <p>
-                Sistema desenvolvido para melhorar a organização
-                e o gerenciamento do hotel.
-            </p>
-            <hr>
-        </section>
- 
-        
- 
-        <section id="problemas">
- 
-            <h2>Problemas Identificados</h2>
- 
-            <article>
-                <h3>1. Perda de controle das reservas</h3>
-                <p>
-                    Dificuldade para organizar as reservas e controlar
-                    a disponibilidade dos quartos.
-                </p>
-            </article>
- 
-            <article>
-                <h3>2. Demora no check-in e check-out</h3>
-                <p>
-                    O processo manual pode gerar filas e aumentar
-                    o tempo de atendimento dos hóspedes.
-                </p>
-            </article>
- 
-            <article>
-                <h3>3. Falta de controle dos quartos</h3>
-                <p>
-                    Dificuldade para saber quais quartos estão ocupados,
-                    disponíveis, em limpeza ou em manutenção.
-                </p>
-            </article>
- 
-            <article>
-                <h3>4. Dificuldade no acompanhamento das solicitações</h3>
-                <p>
-                    Pedidos de manutenção e serviço de quarto podem
-                    não chegar corretamente ao setor responsável.
-                </p>
-            </article>
- 
-            <article>
-                <h3>5. Falta de continuidade nos pedidos</h3>
-                <p>
-                    Dificuldade para acompanhar se uma solicitação foi
-                    recebida, está em andamento ou foi concluída.
-                </p>
-            </article>
-            
-            <hr>
- 
-        </section>
- 
-        <section id="solucoes">
- 
-            <h2>Soluções Propostas</h2>
- 
-            <article>
-                <h3>Controle de Reservas</h3>
-                <p>
-                    Centralização das reservas e controle da
-                    disponibilidade dos quartos.
-                </p>
-            </article>
- 
-            <article>
-                <h3>Check-in e Check-out Digital</h3>
-                <p>
-                    Cadastro dos hóspedes e realização dos processos
-                    de entrada e saída de forma mais organizada.
-                </p>
-            </article>
- 
-            <article>
-                <h3>Controle de Quartos</h3>
-                <p>
-                    Visualização do status de cada quarto:
-                    disponível, ocupado, em limpeza ou em manutenção.
-                </p>
-            </article>
- 
-            <article>
-                <h3>Gestão de Solicitações</h3>
-                <p>
-                    Registro e encaminhamento de solicitações para
-                    o setor responsável.
-                </p>
-            </article>
- 
-            <article>
-                <h3>Acompanhamento de Solicitações</h3>
-                <p>
-                    Cada solicitação poderá possuir um status:
-                    Aberta, Em andamento ou Concluída.
-                </p>
-            </article>
-             
-            <hr>
- 
-        </section>
- 
-        <section id="processo">
- 
-            <h2>Atendimento</h2>
- 
-            <ol>
-                <li>Reserva do quarto</li>
-                <li>Cadastro do hóspede</li>
-                <li>Check-in</li>
-                <li>Hospedagem</li>
-                <li>Solicitação de serviços</li>
-                <li>Atendimento da solicitação</li>
-                <li>Check-out</li>
-                <li>Finalização da hospedagem</li>
-            </ol>
 
-            <hr>
-        </section>
- 
-    </main>
- 
-    
- 
-    <footer>
-        <p>Hotel Hilbert - Sistema de Gestão Hoteleira</p>
-    </footer>
- 
+            ocupados.forEach(q => {
+                const totalConsumo = q.consumos.reduce((acc, item) => acc + item.valor, 0);
+                const total = (q.diaria * q.diarias) + totalConsumo;
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>#${q.numero}</strong> (${q.tipo})</td>
+                        <td>${q.hospede}<br><small>${q.doc}</small></td>
+                        <td>${q.diarias}x R$ ${q.diaria},00</td>
+                        <td><strong>R$ ${total},00</strong> <small>(Consumo: R$ ${totalConsumo},00)</small></td>
+                        <td><button class="btn btn-alerta" onclick="realizarCheckout('${q.numero}')">Fazer Check-out</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function alterarStatusQuarto(numQuarto, novoStatus) {
+            const quarto = quartos.find(q => q.numero === numQuarto);
+            quarto.status = novoStatus;
+            atualizarInterface();
+        }
+
+        function renderizarQuartos() {
+            const grid = document.getElementById('grid-quartos');
+            grid.innerHTML = '';
+
+            quartos.forEach(q => {
+                let classeStatus = '';
+                let botoesAcao = '';
+
+                if (q.status === 'Disponível') {
+                    classeStatus = 'status-livre';
+                    botoesAcao = `<button class="btn btn-secundario" onclick="alterarStatusQuarto('${q.numero}', 'Manutenção')">Enviar p/ Manutenção</button>`;
+                } else if (q.status === 'Ocupado') {
+                    classeStatus = 'status-ocupado';
+                    botoesAcao = `<small>Hóspede: <strong>${q.hospede}</strong></small>`;
+                } else if (q.status === 'Em Limpeza') {
+                    classeStatus = 'status-limpeza';
+                    botoesAcao = `<button class="btn btn-sucesso" onclick="alterarStatusQuarto('${q.numero}', 'Disponível')">Concluir Limpeza</button>`;
+                } else {
+                    classeStatus = 'status-manutencao';
+                    botoesAcao = `<button class="btn btn-sucesso" onclick="alterarStatusQuarto('${q.numero}', 'Disponível')">Liberar Quarto</button>`;
+                }
+
+                grid.innerHTML += `
+                    <div class="card-quarto ${classeStatus}">
+                        <div class="quarto-topo">
+                            <h4>Quarto ${q.numero}</h4>
+                            <span class="tag-status">${q.status}</span>
+                        </div>
+                        <p>${q.tipo} — R$ ${q.diaria}/noite</p>
+                        <div class="quarto-acoes">${botoesAcao}</div>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirSolicitacao(event) {
+            event.preventDefault();
+            const quarto = document.getElementById('chamado-quarto').value;
+            const setor = document.getElementById('chamado-setor').value;
+            const desc = document.getElementById('chamado-desc').value;
+
+            chamados.unshift({
+                id: Date.now(),
+                quarto,
+                setor,
+                desc,
+                status: 'Aberta'
+            });
+
+            document.getElementById('chamado-desc').value = '';
+            atualizarInterface();
+        }
+
+        function avancarChamado(id) {
+            const chamado = chamados.find(c => c.id === id);
+            if (chamado.status === 'Aberta') chamado.status = 'Em andamento';
+            else if (chamado.status === 'Em andamento') chamado.status = 'Concluída';
+            atualizarInterface();
+        }
+
+        function renderizarChamados() {
+            const tbody = document.getElementById('lista-chamados');
+            tbody.innerHTML = '';
+
+            chamados.forEach(c => {
+                const badgeClass = c.status === 'Aberta' ? 'badge-aberta' : (c.status === 'Em andamento' ? 'badge-andamento' : 'badge-concluida');
+                const btnHtml = c.status !== 'Concluída'
+                    ? `<button class="btn btn-secundario" onclick="avancarChamado(${c.id})">Avançar Status</button>`
+                    : `<span class="texto-ok">Finalizado</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>#${c.quarto}</strong></td>
+                        <td>${c.setor}</td>
+                        <td>${c.desc}</td>
+                        <td><span class="status-pill ${badgeClass}">${c.status}</span></td>
+                        <td>${btnHtml}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function lancarConsumo(event) {
+            event.preventDefault();
+            const numQuarto = document.getElementById('consumo-quarto').value;
+            if (!numQuarto) return alert('Nenhum quarto ocupado selecionado.');
+
+            const [itemNome, valorStr] = document.getElementById('consumo-item').value.split('|');
+            const quarto = quartos.find(q => q.numero === numQuarto);
+            quarto.consumos.push({ item: itemNome, valor: parseFloat(valorStr) });
+
+            atualizarInterface();
+        }
+
+        function renderizarExtratos() {
+            const container = document.getElementById('extrato-contas');
+            container.innerHTML = '';
+            const ocupados = quartos.filter(q => q.status === 'Ocupado');
+
+            if (ocupados.length === 0) {
+                container.innerHTML = '<p>Nenhum quarto ocupado para exibir fatura.</p>';
+                return;
+            }
+
+            ocupados.forEach(q => {
+                const subtotalDiarias = q.diaria * q.diarias;
+                const subtotalConsumo = q.consumos.reduce((s, c) => s + c.valor, 0);
+                const itensLista = q.consumos.length > 0
+                    ? q.consumos.map(c => `<li>${c.item} — R$ ${c.valor},00</li>`).join('')
+                    : '<li>Nenhum consumo extra registrado</li>';
+
+                container.innerHTML += `
+                    <div class="card">
+                        <h4>Quarto ${q.numero} — ${q.hospede}</h4>
+                        <p><strong>Hospedagem:</strong> ${q.diarias} diárias (R$ ${subtotalDiarias},00)</p>
+                        <p><strong>Consumos:</strong></p>
+                        <ul class="lista-extrato">${itensLista}</ul>
+                        <hr>
+                        <p class="total-fatura">Total Acumulado: R$ ${subtotalDiarias + subtotalConsumo},00</p>
+                    </div>
+                `;
+            });
+        }
+
+        function renderizarMapaAndares() {
+            const container = document.getElementById('container-planta-andares');
+            container.innerHTML = '';
+
+            // Ordena os andares de cima para baixo (3º, 2º, 1º) como um prédio real
+            const andaresUnicos = [...new Set(quartos.map(q => q.andar))].sort((a, b) => b - a);
+
+            andaresUnicos.forEach(numAndar => {
+                const quartosDoAndar = quartos.filter(q => q.andar === numAndar);
+                // Divide metade dos quartos para a ala superior do corredor e metade para a ala inferior
+                const metade = Math.ceil(quartosDoAndar.length / 2);
+                const alaNorte = quartosDoAndar.slice(0, metade);
+                const alaSul = quartosDoAndar.slice(metade);
+
+                const gerarHtmlSala = (q) => {
+                    let classeMapa = '';
+                    let infoHospede = '';
+
+                    if (q.status === 'Disponível') {
+                        classeMapa = 'sala-livre';
+                        infoHospede = `<span class="sala-subinfo">Pronto para check-in</span>`;
+                    } else if (q.status === 'Ocupado') {
+                        classeMapa = 'sala-ocupada';
+                        infoHospede = `<div class="sala-hospede">👤 ${q.hospede}</div>`;
+                    } else if (q.status === 'Em Limpeza') {
+                        classeMapa = 'sala-limpeza';
+                        infoHospede = `<span class="sala-subinfo">Equipe de governança</span>`;
+                    } else {
+                        classeMapa = 'sala-manutencao';
+                        infoHospede = `<span class="sala-subinfo">Bloqueado p/ reparo</span>`;
+                    }
+
+                    return `
+                        <div class="sala-mapa ${classeMapa}">
+                            <div class="sala-header">
+                                <span class="sala-numero">Q-${q.numero}</span>
+                                <span class="sala-badge">${q.status}</span>
+                            </div>
+                            <div class="sala-tipo">${q.tipo}</div>
+                            ${infoHospede}
+                        </div>
+                    `;
+                };
+
+                container.innerHTML += `
+                    <div class="bloco-andar">
+                        <div class="etiqueta-andar">
+                            <span>${numAndar}º ANDAR</span>
+                            <small>${numAndar === 3 ? 'Ala VIP / Cobertura' : (numAndar === 2 ? 'Ala Executiva' : 'Ala Térrea / Standard')}</small>
+                        </div>
+                        <div class="planta-pavimento">
+                            <div class="fileira-quartos">
+                                ${alaNorte.map(gerarHtmlSala).join('')}
+                            </div>
+                            <div class="corredor-central">
+                                <span>🛗 Elevador &nbsp;•&nbsp; Corredor do ${numAndar}º Pavimento &nbsp;•&nbsp; Escadas 🪜</span>
+                            </div>
+                            <div class="fileira-quartos">
+                                ${alaSul.map(gerarHtmlSala).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Inicializa o sistema
+        atualizarInterface();
+    </script>
 </body>
 
-<script>
-    // Exibir a seção "Início" por padrão
-    exibeSecao('inicio');
-</script>
- 
 </html>

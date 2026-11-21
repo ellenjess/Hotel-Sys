@@ -1,42 +1,514 @@
-h1{
-    color: #ffffff;
-    font-size: 2.5em;
-    text-align: center;
-    border-style: solid;
-    border-radius: 10px;
-    background-color: #2600ff;
+:root {
+    --azul-escuro: #1e293b;
+    --azul-primario: #2563eb;
+    --azul-hover: #1d4ed8;
+    --fundo: #f1f5f9;
+    --branco: #ffffff;
+    --texto: #334155;
+    --borda: #cbd5e1;
 }
 
-h2{
-    color: #444;
-    font-size: 2em;
-    text-align: center;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-h3{
-    color: #555;
-    font-size: 1.5em;
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--fundo);
+    color: var(--texto);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+
+.topo {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: var(--branco);
+    padding: 32px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.topo h1 {
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.subtitulo {
+    font-size: 1rem;
+    color: #cbd5e1;
+    font-style: italic;
+}
+
+
+.menu-navegacao {
+    background-color: var(--branco);
+    border-bottom: 1px solid var(--borda);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 20px;
+    justify-content: center;
+}
+
+.nav-btn {
+    background: transparent;
+    border: none;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--texto);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #e2e8f0;
+    color: var(--azul-escuro);
+}
+
+.nav-btn.active {
+    background-color: var(--azul-primario);
+    color: var(--branco);
+}
+
+
+main {
+    flex: 1;
+    padding: 30px 20px;
+}
+
+.tela {
+    display: none;
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+.tela.ativa {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+.card {
+    background-color: var(--branco);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    border: 1px solid #e2e8f0;
+}
+
+.card.destaque {
+    border-left: 5px solid var(--azul-primario);
+}
+
+.card h2 {
+    color: var(--azul-escuro);
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.card h3 {
+    color: var(--azul-escuro);
+    margin-bottom: 16px;
+    font-size: 1.25rem;
+}
+
+.titulo-secao {
+    margin: 24px 0 16px;
+    color: var(--azul-escuro);
+    font-size: 1.3rem;
+}
+
+.descricao-tela {
+    color: #64748b;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 20px;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #dbeafe;
+    color: var(--azul-primario);
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.card h4 {
+    color: var(--azul-escuro);
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.card p {
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+}
+
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 16px;
+    align-items: end;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--azul-escuro);
+}
+
+input, select {
+    padding: 10px 12px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    background-color: #f8fafc;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--azul-primario);
+    background-color: var(--branco);
+}
+
+
+.btn {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-primario {
+    background-color: var(--azul-primario);
+    color: var(--branco);
+    width: 100%;
+}
+
+.btn-primario:hover { background-color: var(--azul-hover); }
+
+.btn-secundario { background-color: #e2e8f0; color: var(--azul-escuro); }
+.btn-secundario:hover { background-color: #cbd5e1; }
+
+.btn-sucesso { background-color: #16a34a; color: var(--branco); }
+.btn-sucesso:hover { background-color: #15803d; }
+
+.btn-alerta { background-color: #dc2626; color: var(--branco); }
+.btn-alerta:hover { background-color: #b91c1c; }
+
+/* --- TABELAS --- */
+.tabela-responsiva { overflow-x: auto; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
     text-align: left;
 }
 
-p{
-    font-size: 1.2em;
-    text-align: justify;
+th, td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.95rem;
 }
 
-nav{
-    background-color: #aaa;
-    overflow: hidden;
+th {
+    background-color: #f8fafc;
+    color: var(--azul-escuro);
+    font-weight: 700;
+}
+
+.texto-centro { text-align: center; color: #64748b; }
+
+
+.grid-quartos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.card-quarto {
+    border-radius: 10px;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-top-width: 5px;
+    background-color: #f8fafc;
+}
+
+.quarto-topo {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    align-content: center;
+    margin-bottom: 8px;
 }
 
-body{
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
-    margin: 10;
-    padding: 25;
-    border: #2600ff;
-    background-color: #dadaec;
+.tag-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.06);
 }
 
+.status-livre { border-top-color: #16a34a; }
+.status-ocupado { border-top-color: #2563eb; }
+.status-limpeza { border-top-color: #f59e0b; }
+.status-manutencao { border-top-color: #dc2626; }
+
+.quarto-acoes { margin-top: 14px; }
+
+
+.status-pill {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.badge-aberta { background-color: #fee2e2; color: #b91c1c; }
+.badge-andamento { background-color: #fef3c7; color: #b45309; }
+.badge-concluida { background-color: #dcfce7; color: #15803d; }
+
+.texto-ok { color: #16a34a; font-weight: 600; }
+
+.lista-extrato { margin: 8px 0 12px 20px; font-size: 0.9rem; }
+
+.total-fatura {
+    margin-top: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--azul-escuro);
+}
+
+
+.cabecalho-mapa {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.legenda-mapa {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    background: #f8fafc;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.bolinha {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.bg-livre { background-color: #16a34a; }
+.bg-ocupado { background-color: #2563eb; }
+.bg-limpeza { background-color: #f59e0b; }
+.bg-manutencao { background-color: #dc2626; }
+
+.planta-hotel {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.bloco-andar {
+    border: 2px solid #94a3b8;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #e2e8f0;
+}
+
+.etiqueta-andar {
+    background-color: #1e293b;
+    color: var(--branco);
+    padding: 10px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.etiqueta-andar small {
+    color: #94a3b8;
+    font-weight: 400;
+}
+
+.planta-pavimento {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.fileira-quartos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.corredor-central {
+    background-color: #cbd5e1;
+    border-top: 2px dashed #94a3b8;
+    border-bottom: 2px dashed #94a3b8;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Blocos individuais de cada quarto no mapa */
+.sala-mapa {
+    background-color: var(--branco);
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 105px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.15s ease;
+}
+
+.sala-mapa:hover {
+    transform: translateY(-2px);
+}
+
+.sala-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.sala-numero {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--azul-escuro);
+}
+
+.sala-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+    text-transform: uppercase;
+}
+
+.sala-tipo {
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.sala-hospede {
+    background-color: #dbeafe;
+    color: #1e3a8a;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-left: 3px solid #2563eb;
+}
+
+.sala-subinfo {
+    font-size: 0.82rem;
+    font-style: italic;
+    color: #475569;
+}
+
+.sala-livre {
+    border-color: #16a34a;
+    background-color: #f0fdf4;
+}
+.sala-livre .sala-badge { background-color: #dcfce7; color: #15803d; }
+
+.sala-ocupada {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+}
+.sala-ocupada .sala-badge { background-color: #dbeafe; color: #1d4ed8; }
+
+.sala-limpeza {
+    border-color: #f59e0b;
+    background-color: #fffbeb;
+}
+.sala-limpeza .sala-badge { background-color: #fef3c7; color: #b45309; }
+
+.sala-manutencao {
+    border-color: #dc2626;
+    background-color: #fef2f2;
+}
+.sala-manutencao .sala-badge { background-color: #fee2e2; color: #b91c1c; }
+
+/* --- RODAPÉ --- */
+.rodape {
+    background-color: var(--azul-escuro);
+    color: #94a3b8;
+    text-align: center;
+    padding: 18px;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
